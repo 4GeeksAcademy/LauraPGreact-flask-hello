@@ -13,7 +13,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			token: sessionStorage.getItem("token") || null,
+            email: sessionStorage.getItem("email") || null,
+			users:[]
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -33,20 +36,68 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
-			changeColor: (index, color) => {
-				//get the store
+			logIn: async (email, password) => {
+                const store = getStore();
+                try {
+                    const resp = await fetch(`${process.env.BACKEND_URL}/api/login`, {
+                        method: "POST",
+                        body: JSON.stringify({ email, password }),
+                        headers: { "Content-Type": "application/json" }
+                    });
+                    const data = await resp.json();
+
+                    if (data.token) {
+                        sessionStorage.setItem("token", data.token);
+                        sessionStorage.setItem("email", email); 
+                        setStore({ ...store, token: data.token, email: data.email });
+                        console.log("Success:", data);
+                    } else {
+                        console.log("Token no recibido:", data);
+                    }
+                } catch (error) {
+                    console.error("Network error", error);
+                }
+            },
+
+			addUser: async(email, password, name, last_name, is_active)=>{
 				const store = getStore();
+				try{
+					const resp = await fetch(`${process.env.BACKEND_URL}/api/signup`,{
+						method :"POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({email, password, name, last_name, is_active})
+						
+					});
+					if (!resp.ok) {
+					
+						const errorData = await resp.json();
+						console.error("Error:", errorData);
+						return;
+					}
+	
+					const data = await resp.json();
+					const newUsers = [...store.users, data];
+					  // Si el backend devuelve un token, guardarlo en sessionStorage y en el store
+					if (data.token) {
+						
+						sessionStorage.setItem("token", data.token);
+						sessionStorage.setItem("email", data.email); // También guardar el email en sessionStorage
+						
+						setStore({ ...store, token: data.token, email: data.email, users: newUsers });
+						
+					} else {
+						// Si no hay token, solo actualizamos la lista de usuarios en el store
+						setStore({ ...store, users: newUsers });
+					}
+					console.log("Success:", data);
+				} catch (error) {
+					// Manejo de errores de red u otros errores
+					console.error("Network error:", error);
+				}
+			},
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
-
-				//reset the global store
-				setStore({ demo: demo });
-			}
+	
+			
 		}
 	};
 };

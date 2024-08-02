@@ -5,3 +5,68 @@
     one more css for each page that will contain the selected used 
     on that page only (the ones not reused in other pages).
 */
+body{
+    background: linear-gradient(to bottom,#b2cbeecb, #fdefc0);
+}
+
+.container-login, .container-logup{
+    padding:20px 0;
+    max-width: 500px;
+    margin: auto;
+    margin-top: 50px;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 40px;
+    background-color: transparent;
+    padding: 15px;
+    box-shadow: 0 0 55px 30px rgba(247, 246, 246, 0.819);
+}
+
+input{
+    width: 100%;
+    box-sizing: border-box;
+    color:rgba(97, 34, 186, 0.932);
+    padding: 6px 12px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid rgba(130, 54, 235, 0.932);
+    
+  
+}
+
+.button-validate{
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgb(160, 160, 227);
+    font-size: 1.1rem;
+    color:rgb(252, 252, 252);
+    width: 150px;
+
+}
+
+.button-cancel{
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgb(238, 198, 149);
+    text-decoration: none;
+    color:#222;
+    font-size: 1.1rem;
+    color:rgb(106, 104, 104);
+    width: 150px;
+    text-align: center;
+}
+
+label{
+    margin-top: 30px;
+    color:rgba(97, 34, 186, 0.932);
+    font-size: 1.1rem;
+}
+
+.container-button{
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}

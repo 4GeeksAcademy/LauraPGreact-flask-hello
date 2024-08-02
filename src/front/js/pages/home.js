@@ -1,26 +1,41 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
+import { Link, useNavigate } from "react-router-dom";
 import "../../styles/home.css";
 
 export const Home = () => {
-	const { store, actions } = useContext(Context);
+    const { store, actions } = useContext(Context);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate(); 
 
-	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
-			</div>
-			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://start.4geeksacademy.com/starters/react-flask">
-					Read documentation
-				</a>
-			</p>
-		</div>
-	);
+    const createToken = async () => {
+        try {
+            await actions.logIn(email, password);
+            // Redirige solo si el login es exitoso
+            if (store.token) {
+                navigate('/welcome');
+            }
+        } catch (error) {
+            console.error("Login failed", error);
+        }
+    };
+    
+
+    return (
+        <div className="container-login">
+            <div className="data-login">
+                <label htmlFor="email">Email</label>
+                <input type="text" name="email" onChange={(e) => setEmail(e.target.value)} value={email} />
+                <label htmlFor="password">Password</label>
+                <input type="password" name="password" onChange={(e) => setPassword(e.target.value)} value={password} />
+            </div>
+            <div className="container-button">
+                <button className="button-validate" onClick={createToken}>Login</button>
+            </div>
+            <div>
+                Don't have an account? <Link to="/signUp">Sign Up</Link>
+            </div>
+        </div>
+    );
 };
