@@ -16,7 +16,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			],
 			token: sessionStorage.getItem("token") || null,
             email: sessionStorage.getItem("email") || null,
-			users:[]
+			users:[],
+			validation: false,
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -45,12 +46,13 @@ const getState = ({ getStore, getActions, setStore }) => {
                         headers: { "Content-Type": "application/json" }
                     });
                     const data = await resp.json();
-
+					
                     if (data.token) {
                         sessionStorage.setItem("token", data.token);
                         sessionStorage.setItem("email", email); 
-                        setStore({ ...store, token: data.token, email: data.email });
+                        setStore({ ...store, token: data.token, email: data.email, validation: true });
                         console.log("Success:", data);
+						
                     } else {
                         console.log("Token no recibido:", data);
                     }
@@ -83,7 +85,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						sessionStorage.setItem("token", data.token);
 						sessionStorage.setItem("email", data.email); // También guardar el email en sessionStorage
 						
-						setStore({ ...store, token: data.token, email: data.email, users: newUsers });
+						setStore({ ...store, token: data.token, email: data.email, users: newUsers, validation: true });
 						
 					} else {
 						// Si no hay token, solo actualizamos la lista de usuarios en el store
@@ -95,6 +97,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Network error:", error);
 				}
 			},
+			handValidation:() => {
+				setStore({ validation: false})
+
+			}
 
 	
 			

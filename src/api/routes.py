@@ -72,11 +72,11 @@ def add_user():
     #para hashear la contraseña antes de almacenarla en la base de datos.
     #INSTALAR pip install werkzeug
     #IMPORTAR from werkzeug.security import generate_password_hash
-    hashed_password = generate_password_hash(password, method='sha256')
+    hashed_password = generate_password_hash(password)
     
     new_user = User(
         email=email, 
-        password=hashed_password, 
+        password= hashed_password,  #password, 
         #si no incluimos el is_active en el front end aquí le daremos un valor True
         is_active=is_active, 
         name=name, 

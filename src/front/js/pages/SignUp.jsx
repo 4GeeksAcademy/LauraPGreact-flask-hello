@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -11,12 +11,19 @@ export const SignUp = () => {
     const { store, actions } = useContext(Context);
     const navigate = useNavigate();
 
+    useEffect(()=>{
+        actions.handValidation()
+    },[])
+
     const createUser = async () => {
         try {
             await actions.addUser(email, password, name, lastName, isActive);
             // Espera un momento para que store.token se actualice
-            if (store.token) {
+            if (store.validation) {
                 navigate('/welcome');
+            }
+            else{
+                alert("Debes rellenar todos los datos")
             }
         } catch (error) {
             console.error("Login failed", error);

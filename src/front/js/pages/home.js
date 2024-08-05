@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/home.css";
@@ -8,13 +8,22 @@ export const Home = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate(); 
+    
+    useEffect(()=>{
+        actions.handValidation()
+    },[])
+
+    
 
     const createToken = async () => {
         try {
             await actions.logIn(email, password);
             // Redirige solo si el login es exitoso
-            if (store.token) {
+            if (store.validation) {
                 navigate('/welcome');
+            }
+            else{
+                alert("Email o contrañesa invalido")
             }
         } catch (error) {
             console.error("Login failed", error);
